@@ -1,0 +1,129 @@
+
+{% if section.blocks.size > 0 %}
+  <div class="index-section ">
+    <div class="flexslider" id="flexslider--{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="slideshow-section" data-transition="{{ section.settings.slider_home_transition }}" data-autoplay="{{ section.settings.slider_home_auto }}" data-speed="{{ section.settings.slider_home_rate }}" data-show-dots="{{ section.settings.slider_home_show_dots }}">
+      <ul class="slides">
+        {% for block in section.blocks %}
+     {% if block.settings.image != blank %}
+        <style>  
+              @media screen and (max-width: 150px) {
+                .hero__image--{{ block.id }} {
+                  background-image: url('{{ block.settings.image | img_url: '150x' | format: 'jpg' }}');
+                }
+              }
+              @media screen and (min-width: 151px) and (max-width: 300px) {
+                .hero__image--{{ block.id }} {
+                  background-image: url('{{ block.settings.image | img_url: '300x' | format: 'jpg' }}');
+                }
+              }
+              @media screen and (min-width: 301px) and (max-width: 600px) {
+                .hero__image--{{ block.id }} {
+                  background-image: url('{{ block.settings.image | img_url: '600x' | format: 'jpg' }}');
+                }
+              }
+              @media screen and (min-width: 601px) and (max-width: 800px) {
+                .hero__image--{{ block.id }} {
+                  background-image: url('{{ block.settings.image | img_url: '800x' | format: 'jpg' }}');
+                }
+              }
+              @media screen and (min-width: 801px) and (max-width: 1000px) {
+                .hero__image--{{ block.id }} {
+                  background-image: url('{{ block.settings.image | img_url: '1000x' | format: 'jpg' }}');
+                }
+              }
+           
+        </style>
+            <li class="margin hero__image--{{ block.id }}" data-flexslider-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+              {% if block.settings.link != blank %}<a href="{{ block.settings.link }}" class="slide-link slide-link--{{ block.id }}">{% endif %}
+                {{ block.settings.image | img_url: '2048x' | img_tag: block.settings.image.alt }}
+              {% if block.settings.link != blank %}</a>{% endif %}
+            </li>
+           
+          {% else %}
+            <li id="slide--{{ block.id }}" data-flexslider-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+              <span class="slide-link slide-link--{{ block.id }}">
+                {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+                {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+              </span>
+        </li>
+          {% endif %}
+      
+   <div class="wrapper2 ">
+           {% unless block.settings.Heading == blank %}
+                    <div class="site-nav--active backgr">
+                      {% if block.settings.link1 != blank %}
+                       <a href="{{ block.settings.link1 }}" class="site-nav__link padd backgr">
+                       {% endif %}
+                       {{ block.settings.Heading }}
+                       {% if block.settings.link1 != blank %}
+                        </a>
+                        {% endif %}
+                     </div>
+    
+            {% endunless %}
+    
+          {% unless block.settings.heading2 == blank %}
+                  <div class="site-nav--active backgr ">
+                       {% if block.settings.link2 != blank %}
+                        <a href="{{ block.settings.link2 }}" class="site-nav__link padd backgr">
+                        {% endif %}
+                        {{ block.settings.heading2 }}
+                        {% if block.settings.link2 != blank %}
+                        </a>
+                        {% endif %}
+                   </div>
+            {% endunless %} 
+            {% unless block.settings.heading3 == blank %}
+                     <div class="site-nav--active backgr">
+                        {% if block.settings.link3 != blank %}
+                         <a href="{{ block.settings.link3 }}" class="site-nav__link padd backgr">
+                        {% endif %}
+                        {{ block.settings.heading3 }}
+                        {% if block.settings.link3 != blank %}
+                         </a>
+                        {% endif %}
+                       </div> 
+              {% endunless %}
+    
+             {% unless block.settings.heading4 == blank %}
+                     <div class="site-nav--active backgr">
+                        {% if block.settings.link4 != blank %}
+                         <a href="{{ block.settings.link4 }}" class="site-nav__link padd backgr">
+                        {% endif %}
+                        {{ block.settings.heading4 }}
+                        {% if block.settings.link4 != blank %}
+                         </a>
+                        {% endif %}
+                       </div> 
+               {% endunless %} 
+    
+            {% unless block.settings.heading5 == blank %}
+                     <div class="site-nav--active backgr">
+                        {% if block.settings.link5 != blank %}
+                         <a href="{{ block.settings.link5 }}" class="site-nav__link padd backgr">
+                        {% endif %}
+                        {{ block.settings.heading5 }}
+                        {% if block.settings.link5 != blank %}
+                         </a>
+                        {% endif %}
+                     </div> 
+             {% endunless %} 
+     
+          {% unless block.settings.heading6 == blank %}
+                     <div class="site-nav--active backgr">
+                        {% if block.settings.link6 != blank %}
+                         <a href="{{ block.settings.link6 }}" class="site-nav__link padd backgr">
+                        {% endif %}
+                        {{ block.settings.heading6}}
+                        {% if block.settings.link6 != blank %}
+                         </a>
+                        {% endif %}
+                     </div> 
+             {% endunless %} 
+         </div>
+      </ul>
+  {% endfor %}
+    </div>
+  </div> 
+{% endif %}
+

@@ -1,0 +1,113 @@
+<!-- /templates/collection.liquid -->
+{% comment %}
+
+  For more information on collection tags:
+    - http://docs.shopify.com/themes/liquid-variables/collection
+
+{% endcomment %}
+ {{ 'whishListPage.js' | asset_url | script_tag }}
+{% paginate collection.products by 12 %}
+
+{% include 'breadcrumb' %}
+
+{% comment %}
+  Use .grid--rev so that the collection tags appear below the products on mobile
+{% endcomment %}
+<div class=" grid--rev-wishlist">
+    
+    <div class="grid-uniform" id ="favimg">
+      
+      {% comment %}
+        Loop through fav
+      ritoe  products stored in localstorage.
+     
+      <div   class="grid__item large--one-third medium--one-half" >
+
+			 
+      </div> {% endcomment %}
+      {% for product in collections.all.products%}
+       	
+        <script>
+           
+       var count=0;
+       var IdValue=[];
+       var ImagesSrc=[];
+       var productsId=JSON.parse(localStorage.getItem('heartList'));
+     //  IdValue=Object.keys(productsId);
+        
+      
+              
+        for (id in productsId){
+          if (productsId.hasOwnProperty(id) ){
+            IdValue.push(productsId[id]);
+          }
+        }
+         
+        var size=IdValue.length;
+          for(var i=0;i<size; i++){
+    
+            var productid=IdValue[i];
+            
+            if (productid == {{product.id}}){
+                
+                m="{{  product.featured_image.src | img_url: 'large' }}";
+                ImagesSrc.push(m);
+              SaveUrl(productid,m);
+             
+                 
+                } 
+        } 
+         
+        
+        function loadImages(imgArr){
+          for(var i=0; i< imgArr.length; i++) {
+        console.log(imgArr[i]);
+          var img = new Image();
+          
+            img.src = imgArr[i];
+            img.className='fav-img  large--one-half medium--one-half';
+            img.alt=imgArr[i];
+            var iDiv = document.createElement("div");
+            iDiv.className = 'fa fa-heart     ';
+             iDiv.id = imgArr[i];
+            document.getElementById("favimg").appendChild(iDiv).appendChild(img);
+             $(this).css('display', 'inline');
+  
+         } 
+            }
+        
+         function SaveUrl(productid,m){
+           favsUrls =JSON.parse(localStorage.getItem('favsUrls')) ||{};
+           favsUrls[m]=productid;
+           localStorage.setItem("favsUrls", JSON.stringify(favsUrls));
+ 
+ 
+    
+    
+  }
+
+    loadImages(ImagesSrc);
+    
+      </script>
+      
+      
+       
+      
+      {% endfor %}
+   
+      
+    </div>
+   
+   
+    {% if paginate.pages > 1 %}
+      <hr>
+      <div class="pagination">
+        {{ paginate | default_pagination | replace: '&laquo; Previous', '&larr;' | replace: 'Next &raquo;', '&rarr;' }}
+      </div>
+    {% endif %}
+
+ 
+ 
+</div>
+
+{% endpaginate %}

@@ -1,0 +1,251 @@
+<!-- /templates/product.liquid -->
+<!--/* Modal */-->  
+
+     <div class="modal hidden" id="download-modal">
+       
+     	<div class="grid--full"  style="padding:20px 20px 20px 20px;">
+  			<div class="grid__item text-right" style="font-weight: bold;  font-size: 1.2em;">
+    			<span>{{ 'products.product.added_to_cart' | t }}</span>
+  			</div>
+          <div class="grid__item text-center"></div>
+
+  			<div class="grid__item">
+    			<div class="grid--full" style= "padding-top: 20px;">
+                	<div class="grid__item three-quarters text-right" style= "padding-right: 20px;">
+                 		<span style="font-weight: bold;  font-size: 1.1em;">{{ product.title }}</span><br>
+                     	<span> {{product.variant.title}}:{{ 'products.product.size' | t}}</span> |
+      					<span>{{ product.selected_or_first_available_variant.price | money }}</span>
+                  	</div>
+                  
+ 					<div class="grid__item one-quarter right">
+        				<img src="{{ product.featured_image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
+      				</div>
+              </div>
+         	</div>
+          
+          	<div class="grid__item text-center" style= "padding-top: 20px;">
+    			 <a href="/cart" class="btn">{{ 'cart.general.title' | t }}</a>
+  			</div> 
+          
+			<div class="grid__item text-center" style= "padding-top: 20px; text-decoration: underline;">
+    			<a href="javascript:closeModal()">{{ 'cart.general.continue_shopping' | t }}</a>
+  			</div>
+                    
+         </div>
+      
+		</div>
+		<div class="modal--overlay hidden"></div>
+
+
+<div itemscope itemtype="http://schema.org/Product">
+
+  <meta itemprop="url" content="{{ shop.url }}{{ product.url }}">
+  <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
+
+  {% comment %}
+    Get first variant, or deep linked one
+  {% endcomment %}
+  {% assign current_variant = product.selected_or_first_available_variant %}
+
+  {% include 'breadcrumb' %}
+  
+  <div class="grid product-single">
+    <div class="grid__item large--one-half text-center">
+      <div class="product-single__photos" id="ProductPhoto">
+        {% assign featured_image = current_variant.featured_image | default: product.featured_image %}
+        <img src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}" id="ProductPhotoImg">
+      </div>
+
+      {% comment %}
+        Create thumbnails if we have more than one product image
+      {% endcomment %}
+      {% if product.images.size > 1 %}
+        <ul class="product-single__thumbnails grid-uniform" id="ProductThumbs">
+
+          {% for image in product.images %}
+            <li class="grid__item one-quarter">
+              <a href="{{ image.src | img_url: 'large' }}" class="product-single__thumbnail">
+                <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
+              </a>
+            </li>
+          {% endfor %}
+
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="grid__item large--one-half">
+
+     <h2 class="text-right" itemprop="name">{{ product.title }}
+      <span class="left">{% include 'wishlist-product-nologin' button: true %} </span>
+      </h2>
+      <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+        <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+
+        <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
+	<form class="right text-right product-form" id="add-to-cart" action="/cart/add" method="post" >
+
+       
+
+          <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
+          <span id="ProductPrice" class="h4" itemprop="price" content="{{ current_variant.price | divided_by: 100.00 }}">
+            {{ current_variant.price | money }}
+          </span>
+
+          {% if product.compare_at_price_max > product.price %}
+            <span class="visually-hidden">{{ 'products.general.sale_price' | t }}</span>
+            <p id="ComparePrice">
+              {{ 'products.product.compare_at' | t }} {{ current_variant.compare_at_price | money }}
+            </p>
+           <br>
+          {% endif %}
+          <select name="id" id="productSelect" class="product-single__variants">
+            {% for variant in product.variants %}
+              {% if variant.available %}
+
+                {% comment %}
+                  Note: if you use option_selection.js, your select tag will be overwritten, meaning what you have inside <option> will not reflect what you coded below.
+                {% endcomment %}
+                <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+
+              {% else %}
+                <option disabled="disabled">
+                  {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+                </option>
+              {% endif %}
+            {% endfor %}
+          </select>
+ 
+      
+{% comment %} size and color swatching code {% endcomment %}
+    <div class="grid product-swatch">
+     	{% if product.available and product.variants.size > 1 %}
+        	<div class="grid product-swatch">
+      			<span class="right h6">{{ 'products.product.color' | t}} </span>
+      			<span class="right">{% include 'swatch' with 'Color' %}</span>
+      		</div>
+        	<div class="grid">
+      			<span class="h6 right">{{ 'products.product.size' | t}}</span>
+      			<span class="right">{% include 'swatch' with 'Size' %}</span>
+      		</div>
+     	{% endif %} 
+    
+    </div>
+          <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-selector left-aligned">
+        <label for="Quantity" class="quantity-label right">{{ 'products.product.quantity' | t }} </label>
+
+
+      <br>
+        <br>
+         <input type="submit" name="add" value="{{'products.product.add_to_cart' | t}}" id="add" class="btn-cart add-to-cart" onclick="addItem('add-to-cart'); return false" />
+                
+        </form>
+
+      </div>
+ 		<hr>
+      <div class="grid__full">
+          {% if section.settings.social_sharing_products %}
+            {% include 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product %}
+       
+      {% endif %}
+   		</div>
+      <hr>
+      </div>
+ 
+     
+        
+
+  </div>
+
+</div>
+
+{% comment %}
+  To take advantage of a callback on the select dropdown, add option_selection.js
+  and customize the JS in timber.productPage as needed.
+
+  Currently, timber.productPage does the following:
+    - Hides your <select> tag from above
+    - Breaks out the product variants into separate product options, if more than one exists
+    - Generates a <select> tag for each product option
+    - Enables/disables elements based on variant availability
+
+  Callback notes:
+    - Keep the callback available to the global scope (window.selectCallback) so that advanced
+      addons can override it.
+      * E.g. multiple currencies http://docs.shopify.com/manual/configuration/store-customization/currencies-and-translations/currencies/how-to-toggle-between-two-currencies
+{% endcomment %}
+{{ 'option_selection.js' | shopify_asset_url | script_tag }}
+<script>
+ 
+  var selectCallback = function(variant, selector) {
+    timber.productPage({
+      money_format: "{{ shop.money_format }}",
+      variant: variant,
+      selector: selector
+    });
+  };
+
+  jQuery(function($) {
+    new Shopify.OptionSelectors('productSelect', {
+      product: {{ product | json }},
+      onVariantSelected: selectCallback,
+      enableHistoryState: true
+    });
+
+   
+
+    // Add label if only one product option and it isn't 'Title'. Could be 'Size'.
+    {% if product.options.size == 1 and product.options.first != 'Title' %}
+      $('.selector-wrapper:eq(0)').prepend('<label for="productSelect-option-0">{{ product.options.first | escape }}</label>');
+    {% endif %}
+
+    // Hide selectors if we only have 1 variant and its title contains 'Default'.
+    {% if product.variants.size == 1 and product.variants.first.title contains 'Default' %}
+      $('.selector-wrapper').hide();
+    {% endif %}
+  });
+</script>
+
+
+{% schema %}
+  {
+    "name": "Product pages",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_ajax",
+        "label": "Stay on current page when item is added to cart",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "stock_enable",
+        "label": "Show stock when less than 10 products available",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "social_sharing_products",
+        "label": "Enable product sharing",
+        "default": true
+      }
+    ]
+  }
+{% endschema %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

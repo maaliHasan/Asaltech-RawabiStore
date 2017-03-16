@@ -1,0 +1,31 @@
+  
+{% if button %}
+
+{% capture urlimg %}{{  product.featured_image.src | img_url: 'large' }} {% endcapture %}
+ 
+<a title="Go to Wishlist" href="/collections/wishlist-collection"  
+   onClick="SendVal({{product.id}},'{{ product.featured_image.src | img_url: 'large'}}')"; >
+		<i class="fa fa-heart"></i>
+</a>
+<script>
+  
+ function  SendVal(  id, urlimg){
+   
+   //alert(urlimg);
+  
+    // m="{{  product.featured_image.src | img_url: 'large' }}";
+    // console.log(m);
+ 
+    heartList =JSON.parse(localStorage.getItem('heartList')) ||{};
+   
+     heartList[urlimg]=id;
+    localStorage.setItem("heartList", JSON.stringify(heartList));
+     
+  }
+ 
+  function test(url){
+  alert(url);
+  }
+</script>
+
+{% endif %}

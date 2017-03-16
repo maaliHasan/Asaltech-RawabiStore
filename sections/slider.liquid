@@ -1,0 +1,331 @@
+
+{% if section.blocks.size > 0 %}
+  <div class="index-section" >
+       <ul class="slides no-bullets">
+        {% for block in section.blocks %}
+     {% if block.settings.image != blank %}
+        <style>  
+               @media screen and (max-width: 150px) { 
+                .hero__image--{{ block.id }} {
+                  background-image: url('{{ block.settings.image | img_url: '150x' | format: 'jpg' }}');
+                }
+              }
+              @media screen and (min-width: 151px) and (max-width: 300px) {
+                .hero__image--{{ block.id }} {
+                  background-image: url('{{ block.settings.image | img_url: '300x' | format: 'jpg' }}');
+                }
+              }
+              @media screen and (min-width: 301px) and (max-width: 600px) {
+                .hero__image--{{ block.id }} {
+                  background-image: url('{{ block.settings.image  | format: 'jpg' }}');
+                }
+              } 
+             @media screen and (min-width: 801px) and (max-width: 1000px) { 
+                .hero__image--{{ block.id }} {
+                  background-image: url('{{ block.settings.image | img_url: '1000x' | format: 'jpg' }}');
+                } 
+              }    
+       </style>
+         <li  class="image_margin hero__image--{{ block.id }}" data-flexslider-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+              {% if block.settings.link != blank %}<a href="{{ block.settings.link }}" class="slide-link slide-link--{{ block.id }}">{% endif %}
+                {{ block.settings.image | img_url: '2048x' | img_tag: block.settings.image.alt }}
+              {% if block.settings.link != blank %}</a>{% endif %}
+               {% if block.settings.color_secondary != blank %}
+              {% endif %}
+            </li>
+      {% else %}
+            <li id="slide--{{ block.settings.id }}" data-flexslider-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+              <span class="slide-link slide-link--{{ block.id }}">
+                {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+                {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+              </span>
+             </li>   
+        {% endif %} 
+         
+<!-- buttons of the slides images -->
+         
+     <div class="grid-uniform">
+        <div class="wrapper wrapper2 grid grid--full ">
+              <div class="table--small-hide "> 
+                 <style>
+                   .backgr--{{ block.id }} {
+                     background-color:{{ block.settings.color_secondary}};
+                   } 
+                </style>
+            {% unless block.settings.Heading1 == blank %}        
+                  <div class="site-nav--active backgr  " >
+                      {% if block.settings.link1 != blank %}
+                       <a href="{{ block.settings.link1 }}" class="site-nav__link padd btn-color backgr--{{ block.id }}">
+                       {% endif %}
+                       {{ block.settings.Heading1 }}
+                       {% if block.settings.link1 != blank %}
+                        </a>
+                        {% endif %}
+                   </div>
+      
+            {% endunless %}
+         
+          {% unless block.settings.heading2 == blank %}
+                  <div class="site-nav--active backgr ">
+                       {% if block.settings.link2 != blank %}
+                        <a href="{{ block.settings.link2 }}" class="site-nav__link padd btn-color backgr--{{ block.id }}">
+                        {% endif %}
+                        {{ block.settings.heading2 }}
+                        {% if block.settings.link2 != blank %}
+                        </a>
+                        {% endif %}
+                  </div>
+            {% endunless %} 
+            {% unless block.settings.heading3 == blank %}
+                     <div class="site-nav--active backgr   ">
+                        {% if block.settings.link3 != blank %}
+                         <a href="{{ block.settings.link3 }}" class="site-nav__link padd btn-color backgr--{{ block.id }}">
+                        {% endif %}
+                        {{ block.settings.heading3 }}
+                        {% if block.settings.link3 != blank %}
+                         </a>
+                        {% endif %}
+                      </div> 
+              {% endunless %}
+             {% unless block.settings.heading4 == blank %}
+                     <div class="site-nav--active backgr large--one-sixth">
+                        {% if block.settings.link4 != blank %}
+                         <a href="{{ block.settings.link4 }}" class="site-nav__link padd btn-color backgr--{{ block.id }}">
+                        {% endif %}
+                        {{ block.settings.heading4 }}
+                        {% if block.settings.link4 != blank %}
+                         </a>
+                        {% endif %}
+                      </div>
+               {% endunless %} 
+    
+            {% unless block.settings.heading5 == blank %}
+                     <div class="site-nav--active backgr large--one-sixth">
+                        {% if block.settings.link5 != blank %}
+                         <a href="{{ block.settings.link5 }}" class="site-nav__link padd btn-color backgr--{{ block.id }}">
+                        {% endif %}
+                        {{ block.settings.heading5 }}
+                        {% if block.settings.link5 != blank %}
+                         </a>
+                        {% endif %}
+                     </div> 
+              {% endunless %} 
+     
+          {% unless block.settings.heading6 == blank %}
+                     <div class=" site-nav--active backgr large--one-sixth">
+                        {% if block.settings.link6 != blank %}
+                         <a href="{{ block.settings.link6 }}" class="site-nav__link padd btn-color backgr--{{ block.id }}">
+                        {% endif %}
+                        {{ block.settings.heading6}}
+                        {% if block.settings.link6 != blank %}
+                         </a>
+                        {% endif %}
+                     </div> 
+             {% endunless %} 
+         </div>
+          </div> 
+       </div> 
+         
+<!-- This section for the buttons of the slides in the responsive mobile screen 
+      -->
+        <div class="grid--full grid__table mobile_margin">
+          <div class="grid__item ">
+               <div class=" large--hide medium--hide small--show" >
+                  <div class="mobile_section--{{block.id}}" id="div_id--{{block.id}}">{{'general.shop.shop_now'|t}}
+                    <div class="toggleArrow">
+                     {% include 'arrow-below' %}
+                    </div>
+                 </div>
+                 <div class="toggle__hero--{{block.id}}">
+           <div class="linksBoxMobile--{{block.id}}">
+            <div class="linksSegments">
+           {% unless block.settings.Heading1 == blank %}
+            {% if block.settings.link1 != blank %}
+            <a href="{{ block.settings.link1 }}">
+              <div class="segBox rightLine">
+                <span class="segBoxText">{{ block.settings.Heading1 }} </span>
+                <span class="arr" >&lt;</span>
+              </div>
+             </a>
+        {% endif%}{% endunless %}
+              
+   {% unless block.settings.heading2 == blank %}
+       {% if block.settings.link2 != blank %}
+            <a href="{{ block.settings.link2 }}">
+              <div class="segBox rightLine">
+                         <span class="arr" >&lt;</span>
+
+                <span class="segBoxText">{{ block.settings.heading2 }} </span>
+              </div>
+             </a>
+        {% endif%}{% endunless %}    
+   {% unless block.settings.heading3 == blank %}
+       {% if block.settings.link3 != blank %}
+            <a href="{{ block.settings.link3 }}">
+              <div class="segBox rightLine">
+                <span class="segBoxText">{{ block.settings.heading3 }} </span>
+                <span class="arr" >&lt;</span>
+              </div>
+             </a>
+        {% endif%}
+    {% endunless %}
+      {% unless block.settings.heading4 == blank %}
+       {% if block.settings.link4 != blank %}
+            <a href="{{ block.settings.link4 }}">
+              <div class="segBox rightLine">
+                <span class="segBoxText">{{ block.settings.heading4 }} </span>
+                <span class="arr" >&lt;</span>
+              </div>
+             </a>
+        {% endif%}
+    {% endunless %} 
+ {% unless block.settings.heading5 == blank %}
+       {% if block.settings.link5 != blank %}
+            <a href="{{ block.settings.link5 }}">
+              <div class="segBox rightLine">
+                <span class="segBoxText">{{ block.settings.heading3 }} </span>
+                <span class="arr" >&lt;</span>
+              </div>
+             </a>
+        {% endif%}
+    {% endunless %} 
+ {% unless block.settings.heading6 == blank %}
+       {% if block.settings.link6 != blank %}
+            <a href="{{ block.settings.link6 }}">
+              <div class="segBox rightLine">
+                <span class="segBoxText">{{ block.settings.heading6 }} </span>
+                <span class="arr" >&lt;</span>
+              </div>
+             </a>
+        {% endif%}
+    {% endunless %} 
+  <style>  
+   .toggle__hero--{{ block.id }} {
+     display:none;
+  }
+  .mobile_section--{{block.id}}{
+    text-align: right;
+    height: 23px;
+    background-color: #f4f4f4;
+    color: #444;
+    font-size: 20px;
+     padding:28px 0;
+    float: right;
+    width: 100%;
+    margin-bottom: 13px;
+    text-indent: 20px;
+  }
+  .linksBoxMobile--{{block.id}}{
+    height: 0px;
+    overflow: hidden;
+    border-top: 2px solid #fff;
+    float: left;
+    width: 100%;
+}
+
+ </style> 
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>          
+ </div>  
+   
+       </ul>
+  {% endfor %}
+    </div>
+ {% endif %} 
+             
+{% schema %}
+   {
+    "name": "Slideshow",
+    "max_blocks": 6,
+    "blocks": [
+      {
+        "type": "slide",
+        "name": "Slide",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+
+          {
+            "type": "text",
+            "id": "Heading1",
+            "label": "Heading1"
+           
+          },
+        {
+            "type": "url",
+            "id": "link1",
+            "label": "Slide link"
+          },
+   {
+            "type": "text",
+            "id": "heading2",
+            "label": "heading2"
+          
+          },
+        {
+            "type": "url",
+            "id": "link2",
+            "label": "Slide link"
+          },
+  {
+            "type": "text",
+            "id": "heading3",
+            "label": "heading3"
+          
+          },
+        {
+            "type": "url",
+            "id": "link3",
+            "label": "Slide link"
+          },
+ {
+            "type": "text",
+            "id": "heading4",
+            "label": "heading4"
+         
+          },
+        {
+            "type": "url",
+            "id": "link4",
+            "label": "Slide link"
+          },
+{
+            "type": "color",
+            "id": "color_secondary",
+            "label": "Color",
+           "default": "#dcdcdc",
+           "info": "Used for secondary buttons"
+          },
+ {
+            "type": "text",
+            "id": "heading5",
+            "label": "heading5"
+          
+          },
+        {
+            "type": "url",
+            "id": "link5",
+            "label": "Slide link"
+          },
+{
+            "type": "text",
+            "id": "heading6",
+            "label": "heading6"
+         
+          },
+        {
+            "type": "url",
+            "id": "link6",
+            "label": "Slide link"
+          } 
+        ]
+      }
+    ]
+  }
+{% endschema %}

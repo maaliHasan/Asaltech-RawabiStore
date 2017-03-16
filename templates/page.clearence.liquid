@@ -1,0 +1,48 @@
+<!-- /templates/collection.liquid -->
+{% comment %}
+{% comment %}
+
+  For more information on collection tags:
+    - http://docs.shopify.com/themes/liquid-variables/collection
+
+{% endcomment %}
+
+ 
+{% include 'breadcrumb' %}
+
+{% comment %}
+  Use .grid--rev so that the collection tags appear below the products on mobile
+{% endcomment %}
+<div class="grid--rev">
+  <div class="grid__item large--three-quarters">
+
+    {% comment %}
+      Different markup if a collection description exists
+    {% endcomment %}
+  <header class="section-header">
+        <h4 class="section-header__title section-header__left">{{ collection.title }}</h4>
+         <div class="section-header__right">
+          {% include 'collection-sorting' %}
+                 </div> 
+         
+            <div class="filter-menue one-whole large--hide "  >
+              <nav class="navigation-filter fmenue large--hide " style="display:none;" >
+                   <hr>
+                   {% include 'filter-menu' %}
+             
+              </nav>
+        </div>
+       
+      
+      </header>
+<hr>
+      <div class="grid-uniform">
+        {% for product in collection.products %}
+
+        {% include 'product-grid-item' %}
+        {% endfor %}
+    </div>
+  
+  </div>
+</div>
+{% endcomment %}

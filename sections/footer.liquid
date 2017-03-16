@@ -1,0 +1,227 @@
+<footer class="site-footer" role="contentinfo"> 
+  <div class="wrapper">
+  	<hr>
+      <div class="grid-uniform text-center">
+        {% for block in section.blocks %}
+      	{% case block.type %}
+      		{% when 'menu' %}
+       			<div class="grid__item large--one-quarter medium--one-half">
+           			<h4 class="site-footer__menu-footer__title">{{ linklists[block.settings.link_list].title}}</h4>
+                  		<ul class="site-footer__list list-inline">
+                    		{% for link in linklists[block.settings.link_list].links %}
+                      			<li class=""><a href="{{ link.url }}">{{ link.title }}</a></li>
+                    		{% endfor %}
+                 		</ul>
+        		</div>
+       	{% endcase %}
+      {% endfor %}
+        
+         {% if settings.footer_newsletter_enable %}
+          <div class="grid__item large--one-quarter medium--one-half">
+            <h4>{{ 'layout.footer.newsletter_title' | t }}</h4>
+               <div class="small--hide">
+                  <form action="{{ settings.newsletter_form_action }}" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" class="input-group">
+                        <div class="input-group__btn">
+                          <button type="submit" class="btn" name="subscribe" id="subscribe">
+                              {% include 'icon-message' %}
+                          </button>
+                        </div>
+                    <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_placeholder' | t }}" name="contact[email]" id="NewsletterEmail-{{ block.id }}" class="input-group__field site-footer__newsletter-input text-right" autocorrect="off" autocapitalize="off">
+                  </form>
+                </div>
+                <div class="large--hide medium--hide">
+                  {% form 'customer' %}
+                      {{ form.errors | default_errors }}
+                      {% if form.posted_successfully? %}
+                        <p class="note form-success">{{ 'general.newsletter_form.confirmation' | t }}</p>
+                      {% else %}
+                        <div class="input-group">
+                            <div class="input-group__btn">
+                                  <button type="submit" class="btn" name="commit">
+                                      {% include 'icon-message' %}
+                                  </button>
+                              </div>
+                          <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_placeholder' | t }}" name="contact[email]" id="NewsletterEmail-{{ block.id }}" class="input-group__field site-footer__newsletter-input text-right" autocorrect="off" autocapitalize="off">
+                        </div>
+                      {% endif %}
+                  {% endform %}
+                </div>
+          </div> 
+        {%endif%}
+        
+        {% if settings.footer_social_enable %}
+         <div class="grid__item large--one-quarter medium--one-half">
+             <h4>{{ 'layout.footer.social_title' | t }}</h4>
+                <ul class="inline-list social-icons">
+                   {% if settings.social_twitter_link != blank %}
+                    <li>
+                      <a class="icon-fallback-text" href="{{ settings.social_instagram_link }}" target="_blank" title="{{ shop.name }} on instagram">    
+                           {% include 'icon-instagram' %}
+                      </a>
+                    </li> 
+                   {%endif%}
+                   {% if settings.social_twitter_link != blank %}
+                    <li>
+                      <a class="icon-fallback-text" href="{{ settings.social_youtube_link }}" target="_blank" title="{{ shop.name }} on youtube">    
+                           {% include 'icon-youtube' %}
+                      </a>
+                    </li>
+                   {%endif%}
+                   {% if settings.social_twitter_link != blank %}
+                    <li>
+                      <a class="icon-fallback-text" href="{{ settings.social_twitter_link }}" target="_blank" title="{{ shop.name }} on twitter">    
+                           {% include 'icon-twitter' %}
+                      </a>
+                    </li>
+                   {%endif%}
+                   {% if settings.social_twitter_link != blank %}
+                    <li>
+                      <a class="icon-fallback-text" href="{{ settings.social_pintrest_link }}" target="_blank" title="{{ shop.name }} on pintrest">
+                        {% include 'icon-pinterest' %}
+                      </a>
+                    </li> 
+                   {%endif%}
+                   {% if settings.social_twitter_link != blank %}
+                    <li>
+                      <a class="icon-fallback-text" href="{{ settings.social_facebook_link }}" target="_blank" title="{{ shop.name }} on Facebook">
+                        {% include 'icon-facebook' %}
+                      </a>
+                    </li> 
+                   {%endif%}
+                </ul>
+          </div>
+         {% endif %}
+        
+      
+  </div> <!--grid-uniform-->
+  </div> <!--wrapper-->
+    <hr>
+
+    <div class="grid--full">
+      <div class="grid__item text-center">
+          <small>{{shop.name}} &copy; {{ 'now' | date: "%Y" }}</small>
+      </div>
+    </div>
+
+  {% if section.settings.show_methods_of_payment %}
+    {% unless shop.enabled_payment_types == empty %}
+    <div class="grid">
+      <div class="grid__item text-center">
+        {% assign payment_icons_available = 'amazon_payments,american_express,apple_pay,bitcoin,cirrus,dankort,diners_club,discover,dogecoin,dwolla,forbrugsforeningen,interac,jcb,litecoin,maestro,master,paypal,visa' | split: ',' %}
+        <ul class="inline-list payment-icons">
+          {% for type in shop.enabled_payment_types %}
+            {% if payment_icons_available contains type %}
+              <li>
+                <span class="icon-fallback-text">
+                  <span class="icon icon-{{type}}" aria-hidden="true"></span>
+                  <span class="fallback-text">{{ type | replace: '_', ' ' }}</span>
+                </span>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endunless %}
+  {% endif %}
+
+</footer>
+
+
+{% schema %}
+  {
+    "name": "Footer",
+ 	"max_blocks": 6,
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_methods_of_payment",
+        "label": "Payment icons"
+      }
+    ],
+    "blocks": [
+
+      {
+        "type": "newsletter",
+        "name": "Newsletter",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "color",
+            "id": "color_newsletter_input",
+            "label": "Newsletter field",
+            "default": "#1a1a1a"
+          },
+          {
+            "type": "color",
+            "id": "color_newsletter_input_text",
+            "label": "Newsletter text",
+            "default": "#fff"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading"
+          },
+          {
+            "type": "textarea",
+            "id": "text",
+            "label": "Text"
+          }
+        ]
+      },
+	  {
+        "type": "social",
+        "name": "Social icons",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "Edit your social settings and accounts in General settings"
+          }
+        ]
+      },
+      {
+        "type": "menu",
+        "name": "Menu",
+        "settings": [
+          {
+            "id": "link_list",
+            "type": "link_list",
+            "label": "Menu",
+            "default": "footer"
+          }
+        ]
+      },
+      {
+        "type": "blog",
+        "name": "Latest blog post",
+        "settings": [
+          {
+            "type": "blog",
+            "id": "blog",
+            "label": "Blog"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "name": "Text",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Text column"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p>Share store details, promotions, or brand content with your customers</p>"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

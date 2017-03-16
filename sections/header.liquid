@@ -1,0 +1,281 @@
+ <style>
+  .site-header__logo {
+    width: {{ section.settings.logo_max_width | default: '150' | remove: 'px' | append: 'px'}};
+  }
+   .site-header__clearence {
+        width: {{ section.settings.clearence_max_width | default: '1020' | remove: 'px' | append: 'px'}};
+ 
+   }
+</style>
+
+ {% comment %}
+   mays code 
+ {% endcomment%} 
+<div data-section-id="{{ section.id }}" data-section-type="header-section">
+  <div class="header-bar medium-down--hide">
+    <div class="wrapper">
+      <div class="post-large--display-table">
+      	<div class="header-bar__left post-large--display-table-cell">
+      	 <div class="header-bar__module header-bar__module--list">
+           
+			 <div class="header-bar__module">
+ 				<a href="/cart" class="cart-page-link">
+            		<div>
+                  		<span id="cartcount">{{ cart.item_count }}</span>
+                  		{%include 'icon-cart' %}
+                  </div>
+        		</a>
+ 			 </div>
+           
+          	 <div class="header-bar__module">
+               <label class="currency-picker">
+ 					<select name="currencies" style="display: inline; width: auto; vertical-align: inherit; ">
+  						{% assign codes = 'USD,EUR,GBP,CAD,ARS,AUD,BBD,BDT,BSD,BHD,BRL,BOB,BND,BGN,ILS,MMK,KYD,CLP,CNY,COP,CRC,HRK,CZK,DKK,DOP,XCD,EGP,XPF,FJD,GHS,GTQ,GYD,GEL,HKD,HUF,ISK,INR,IDR,NIS,JMD,JPY,JOD,KZT,KES,KWD,LVL,LTL,MXN,MYR,MUR,MDL,MAD,MNT,MZN,ANG,NZD,NGN,NOK,OMR,PKR,PYG,PEN,PHP,PLN,QAR,RON,RUB,SAR,RSD,SCR,SGD,SYP,ZAR,KRW,LKR,SEK,CHF,TWD,THB,TZS,TTD,TRY,UAH,AED,UYU,VEB,VND,ZMK' | split: ',' %}
+  						{% assign supported_codes = settings.supported_currencies | split: ' ' %}
+  						<option value="{{ shop.currency }}" selected="selected">{{ shop.currency }}</option>
+  							{% for code in supported_codes %}
+    							{% if code != shop.currency and codes contains code %}
+    								<option value="{{ code }}">{{ code }}</option>
+    							{% endif %}
+  							{% endfor %}
+   					</select>
+					<span class="currency-picker__label"> {{'layout.currency.title' | t}}</span>
+               </label>
+ 			 </div>
+           
+       {% if customer %}
+	 <div class="header-bar__module">
+				<ul class="site-nav-bar" id="nav">
+            			{% for link in linklists.toggle-menu.links %}
+              				{% assign has_drop_down = false %}
+              				{% assign child_list_handle = link.title | handle %}
+				 				{% if forloop.last %}
+              						{% assign child_list_handle =  '' %}
+                 				{% endif %} 
+             					{% if child_list_handle == '' %}
+          							{% for i in (0..8) %}
+            							{% unless has_drop_down %}
+             								{% if forloop.first %}
+                								{% assign temp = 'link-list' %}
+              								{% else %}
+                								{% capture temp %}link-list-{{ i }}{% endcapture %}
+              								{% endif %}
+              								{% if linklists[temp] and linklists[temp].links.size > 0 and linklists[temp].title == link.title %}
+                								{% assign has_drop_down = true %}
+                								{% assign child_list_handle = temp %}
+              								{% endif %}
+                 
+            							{% endunless %}
+         	 						{% endfor %}
+        						{% else %}
+          							{% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}
+            							{% assign has_drop_down = true %}
+          							{% endif %}
+        						{% endif %}
+            
+              {% if linklists[child_list_handle].links != blank %}
+                <li class="site-nav-bar--has-dropdown{% if link.active %} site-nav-bar--active{% endif %}" aria-haspopup="true">
+                   
+                   <a href="{{ link.url }}" class="site-nav-bar-main__link">
+                     <!--<span class="icon icon-arrow-down" aria-hidden="true"></span>-->
+                     {{ link.title }}
+                     <span>{% include 'icon-account' %}</span>
+                  </a>
+                  <ul class="site-nav-bar__dropdown">
+                    {% for childlink in linklists[child_list_handle].links %}
+                      <li{% if childlink.active %} class="site-nav-bar--active"{% endif %}>
+                        <a href="{{ childlink.url }}" class="site-nav-bar__link">{{ childlink.title | escape }}</a>
+                      </li>
+                    {% endfor %}
+                    <li>{{ 'layout.customer.log_out' | t | customer_logout_link }}</li> 
+                  </ul>
+                </li>
+              {% else %}
+                <li {% if link.active %}class="site-nav-bar--active"{% endif %}>
+                  <a href="{{ link.url }}" class="site-nav-bar__link">{{ link.title }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+                   
+        	</ul>
+ 		</div>
+ 		 {%else%}
+			 <div class="header-bar__module">
+				<ul class="site-nav-bar" id="nav">
+            			{% for link in linklists.account-menu.links %}
+              				{% assign has_drop_down = false %}
+              				{% assign child_list_handle = link.title | handle %}
+				 				{% if forloop.last %}
+              						{% assign child_list_handle =  '' %}
+                 				{% endif %} 
+             					{% if child_list_handle == '' %}
+          							{% for i in (0..8) %}
+            							{% unless has_drop_down %}
+             								{% if forloop.first %}
+                								{% assign temp = 'link-list' %}
+              								{% else %}
+                								{% capture temp %}link-list-{{ i }}{% endcapture %}
+              								{% endif %}
+              								{% if linklists[temp] and linklists[temp].links.size > 0 and linklists[temp].title == link.title %}
+                								{% assign has_drop_down = true %}
+                								{% assign child_list_handle = temp %}
+              								{% endif %}
+                 
+            							{% endunless %}
+         	 						{% endfor %}
+        						{% else %}
+          							{% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}
+            							{% assign has_drop_down = true %}
+          							{% endif %}
+        						{% endif %}
+            
+              {% if linklists[child_list_handle].links != blank %}
+                <li class="site-nav-bar--has-dropdown{% if link.active %} site-nav-bar--active{% endif %}" aria-haspopup="true">
+                   
+                   <a href="{{ link.url }}" class="site-nav-bar-main__link">
+                     <!--<span class="icon icon-arrow-down" aria-hidden="true"></span>-->
+                     {{ link.title }}
+                     <span>{% include 'icon-account' %}</span>
+                  </a>
+                  <ul class="site-nav-bar__dropdown">
+                    {% for childlink in linklists[child_list_handle].links %}
+                      <li{% if childlink.active %} class="site-nav-bar--active"{% endif %}>
+                        <a href="{{ childlink.url }}" class="site-nav-bar__link">{{ childlink.title | escape }}</a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </li>
+              {% else %}
+                <li {% if link.active %}class="site-nav-bar--active"{% endif %}>
+                  <a href="{{ link.url }}" class="site-nav-bar__link">{{ link.title }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+        	</ul>
+ 		</div>
+  		{%endif%}
+           
+           	 <div class="header-bar__module">
+      	   		<a class="store" href="/pages/find-a-store">
+        		   <span>{{ 'layout.map.title' | t }}</span>
+                   {%include 'icon-store' %}
+        		</a>
+        	</div>
+       </div>
+      </div> <!--header-bar__left-->
+     </div><!--post-large--display-table-->
+   </div><!--wrapper medium-down--hide-->
+ </div><!--header-bar-->
+  
+
+ {% comment %}
+  Sondos  code 
+   {% endcomment%} 
+
+ <header class="site-header" role="banner">
+    <div class="wrapper ">
+        <div class="grid--full grid__table">
+          <div class="grid__item ">
+              <div class="site-header__search table--small-hide ">
+              	{% include 'search-bar' %}
+              </div>
+  
+            {% if template == 'index' %}
+              <h1 class="site-header__logo large--left medium--left"  >
+            {% else %}
+              <div class="h1 site-header__logo large--left medium--left" >
+            {% endif %}
+                
+             {% if section.settings.logo != blank %}
+            {% capture image_size %}{{ section.settings.logo_max_width }}x{% endcapture %}
+            <a href="/" itemprop="url" class="site-header__logo-link">
+              <img src="{{ section.settings.logo | img_url: image_size }}"
+                   srcset="{{ section.settings.logo | img_url: image_size }} 1x, {{ section.settings.logo | img_url: image_size, scale: 2 }} 2x"
+                   alt="{{ section.settings.logo.alt | default: shop.name }}"
+                   itemprop="logo">
+              </a>
+              {% else %}
+  
+            {% assign shop_name_length = shop.name.size %}
+            <a href="/" itemprop="url" {% if shop_name_length > 10 %} class="site-header__shop-name--small"{% endif %}>{{ shop.name }}</a>
+           {% endif %}
+            {% if template == 'index' %}
+              </h1>
+            {% else %}
+              </div>
+            {% endif %}
+          	</div>  
+         
+          </div>
+      
+       {% include 'site-nav' %}
+      
+      	<div class="post-large--display-table">
+           <div class="site-header__clearence small--hide" >     
+              {% if section.settings.clearence != blank %}
+              	{% capture image_size %}{{ section.settings.clearence_max_width }}x{% endcapture %}
+              		<a href="/collections/discount" itemprop="url" >
+              			<img src="{{ section.settings.clearence | img_url: image_size }}"
+                   			srcset="{{ section.settings.clearence | img_url: image_size }} 1x, {{ section.settings.clearence | img_url: image_size, scale:2}} 2x"
+                   			alt="{{ section.settings.clearence.alt | default: shop.name }}"
+                   			itemprop="clearence">
+             		</a>
+             {% else %}
+             	{% assign shop_name_length = shop.name.size %}
+             		<a href="/" itemprop="url" {% if shop_name_length > 10 %} class="site-header__clearence-name--small"{% endif %}>{{ shop.name }}</a>
+             {% endif %}
+           </div>
+      </div>
+	 </div> <!--wrapper-->
+  </header>
+</div>
+{% schema %}
+  {
+    "name": "Header",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo image"
+      },
+	  {
+        "type": "text",
+        "id": "logo_max_width",
+        "label": "Custom logo width (in pixels)"
+      },
+ 	  {
+        "type": "image_picker",
+        "id": "clearence",
+        "label": "clearence image"
+      },
+ 	  {
+        "type": "text",
+        "id": "clearence_max_width",
+        "label": "Custom clearence width (in pixels)"
+       },
+      {
+        "type": "link_list",
+        "id": "main_linklist",
+        "label": "Menu",
+        "default": "main-menu"
+      },
+
+      {
+        "type": "checkbox",
+        "id": "promo_bar_enable",
+        "label": "Enable promotions bar"
+      },
+      {
+        "type": "text",
+        "id": "promo_bar_text",
+        "label": "Promotions bar text"
+      },
+      {
+        "type": "url",
+        "id": "promo_bar_link",
+        "label": "Promotions bar link",
+        "info": "Optional"
+      }
+    ]
+  }
+{% endschema %}
